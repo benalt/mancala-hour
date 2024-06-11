@@ -94,9 +94,15 @@ export default function MancalaBoard({onGameMessageLog}:MancalaBoardParams){
     setGameState( newGameState );
   }
 
+  let title = <>Player {gameState.activePlayer + 1 }'s Turn ({gameState.activePlayer === 0 ? "red" : "blue"}) </>
+  if (gameState.gameOver) {
+    const winningPlayerTitle = (gameState.stores[0] === gameState.stores[1] ) ? "Tie!" : (gameState.stores[0] > gameState.stores[1] )? "Player 1 Wins" : "Player 2 Win"
+    title = <> Game Over - {winningPlayerTitle}</>
+    
+  }
   return (<>
   
-    <h1>Player {gameState.activePlayer + 1 }'s Turn ({gameState.activePlayer === 0 ? "red" : "blue"}) { gameState.gameOver ? "Game Over": ""}</h1>
+    <h1>{title}</h1>
     
     <div id="mancala-board">
 

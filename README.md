@@ -26,4 +26,4 @@ To take a turn, a player chooses a non-empty pocket from their side of the board
 If a player places the last stone of their turn into an empty pocket on their side, they get to move that one stone to their Mancala, and also capture all the stones in the directly opposite pocket on their opponent's side and add them to their Mancala.
 
 **End of game**
-The game ends when all six spaces on one side of the board are empty. The player with the most stones in their Mancala wins. If a player still has stones on their side of the board when the game ends, they capture all of those stones and add them to thier store.
+The game ends when all six spaces on one side of the board are empty. The losing player still has stones on their side of the board when the game ends, they capture all of those stones and add them to thier Mancala. The player with the most stones in their Mancala wins. 
