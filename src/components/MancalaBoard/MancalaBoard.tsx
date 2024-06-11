@@ -3,7 +3,7 @@ import Pocket from "./Pocket"
 import './MancalaBoard.css'
 import { useState } from "react";
 
-export default function MancalaBoard({...props}){
+export default function MancalaBoard(){
 
   const [gameState, setGameState] = useState({
     pockets : [ 
@@ -15,7 +15,7 @@ export default function MancalaBoard({...props}){
     gameOver: false,
   });
 
-  function selectPocket(pocketIdx:number){
+  function selectPocket(pocketIdx:number):void{
     // player can only select a pocket on thier side
     const playerCanSelectPocket = gameState.activePlayer === 0 ? pocketIdx < 6 : pocketIdx > 5;
     if (gameState.gameOver || gameState.pockets[pocketIdx] === 0 || !playerCanSelectPocket)  {
