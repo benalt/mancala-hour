@@ -4,9 +4,11 @@ import MancalaBoard from './components/MancalaBoard/MancalaBoard'
 
 function App() {
 
+
+
   return (
     <>
-      <MancalaBoard />
+      <MancalaBoard onGameMessageLog={(msg:string)=>{console.log(msg)}} />
     </>
   )
 }
