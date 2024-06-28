@@ -1,52 +1,57 @@
 import Store from "./Store"
 import Pocket from "./Pocket"
-import './MancalaBoard.css'
+//import './MancalaBoard.css'
 import { useState } from "react";
+
+import mancalaBoardClasses from "./MancalaBoard.module.css"
 
 type MancalaBoardParams = {
   onGameMessageLog(msg:string):void
 }
 
-export default function MancalaBoard({onGameMessageLog}:MancalaBoardParams){
+type GameState = {
+  pockets: Array<number>,
+  stores: [number, number],
+  activePlayer: 0 | 1,
+  lastExplaination: string
+}
 
-  const [gameState, setGameState] = useState({
-    pockets : [ 
-      4, 4, 4, 4, 4, 4,
-      4, 4, 4, 4, 4, 4,
-    ], 
-    stores: [0, 0],
-    activePlayer: 0,
-    gameOver: false,
-  });
+const NEW_GAME:GameState = {
+  pockets : [ 
+    4, 4, 4, 4, 4, 4,
+    4, 4, 4, 4, 4, 4,
+  ], 
+  stores: [0, 0],
+  activePlayer: 0,
+  lastExplaination: ''
+};
 
-  function selectPocket(pocketIdx:number):void{
-    // player can only select a pocket on thier side
-    const playerCanSelectPocket = gameState.activePlayer === 0 ? pocketIdx < 6 : pocketIdx > 5;
-    if (gameState.gameOver || gameState.pockets[pocketIdx] === 0 || !playerCanSelectPocket)  {
-      onGameMessageLog(`Player ${gameState.activePlayer + 1} is trying to make an illegal move!`)
-      return
-    }
+function isGameOver(pockets:Array<number>):boolean {
+  return (
+    pockets.slice(0,6).every( val => val === 0) || 
+    pockets.slice(6).every( val => val === 0))
+}
 
-    const newGameState = structuredClone(gameState);
-
-    let numberOfSeeds = newGameState.pockets[pocketIdx];
-
-    onGameMessageLog(`Player ${gameState.activePlayer + 1} selected ${numberOfSeeds} seeds from pocket ${pocketIdx}.`)
+function applyTurnGameState(gameState: GameState, pocketIdx:number): GameState {
+  
+    let numberOfSeeds = gameState.pockets[pocketIdx];
+    let whatJustHappened = "";
+  
     let shouldSwitchActivePlayer = true;
 
     // take all the stones from the selcected pocket
-    newGameState.pockets[pocketIdx] = 0;
+    gameState.pockets[pocketIdx] = 0;
     
     while(numberOfSeeds > 0) {
       // should we add it to the active player's store?
-      if ( (pocketIdx === 0 && newGameState.activePlayer === 0) || 
-            (pocketIdx === 6 && newGameState.activePlayer === 1)) {
+      if ( (pocketIdx === 0 && gameState.activePlayer === 0) || 
+            (pocketIdx === 6 && gameState.activePlayer === 1)) {
           numberOfSeeds -= 1;
-          newGameState.stores[newGameState.activePlayer] +=1;
+          gameState.stores[gameState.activePlayer] +=1;
 
           // we landed on the AP's store, so they get to go again
           if (numberOfSeeds === 0) {
-            onGameMessageLog(`Player ${newGameState.activePlayer + 1}'s last seed went into their Mancala, they get to go again.`)
+            whatJustHappened = `Player ${gameState.activePlayer + 1}'s last seed went into their mancala, they get to go again.`;
             shouldSwitchActivePlayer = false;
             continue;
           }
@@ -54,58 +59,73 @@ export default function MancalaBoard({onGameMessageLog}:MancalaBoardParams){
       
       pocketIdx = pocketIdx === 0 ? 11 : pocketIdx - 1;
       numberOfSeeds -= 1;
-      newGameState.pockets[pocketIdx] += 1;
+      gameState.pockets[pocketIdx] += 1;
       
       // if we added to an empty pocket take from the opposite pocket
-      if (numberOfSeeds === 0 && newGameState.pockets[pocketIdx] === 1) {
+      if (numberOfSeeds === 0 && gameState.pockets[pocketIdx] === 1) {
         const oppositeIdx =  Math.abs(pocketIdx - 11);
-        const newStore = 1 + newGameState.stores[newGameState.activePlayer] + newGameState.pockets[oppositeIdx];
+        const newStore = 1 + gameState.stores[gameState.activePlayer] + gameState.pockets[oppositeIdx];
 
-        onGameMessageLog(`Player ${newGameState.activePlayer + 1}'s last seed went into an open pocket, they capture ${newGameState.pockets[oppositeIdx]} seeds from pocket ${oppositeIdx} .`)
+        whatJustHappened = `Player ${gameState.activePlayer + 1}'s last seed went into an empty pocket, they get to keep that seed and they capture seeds from the opposite pocket.`;
 
-        newGameState.stores[newGameState.activePlayer] = newStore;    
-        newGameState.pockets[pocketIdx] = 0;
-        newGameState.pockets[oppositeIdx] = 0;
+        gameState.stores[gameState.activePlayer] = newStore;    
+        gameState.pockets[pocketIdx] = 0;
+        gameState.pockets[oppositeIdx] = 0;
       }
     }
     
     // end the game if either side is all 0 
-    const isGameOver = (
-      newGameState.pockets.slice(0,6).every( val => val === 0) || 
-      newGameState.pockets.slice(6).every( val => val === 0));
+    const postUpdateGameOver = isGameOver(gameState.pockets);
 
-    if (isGameOver) {
-      newGameState.gameOver = true;
+    if (postUpdateGameOver) {
       
-      // add all pocketedStones to the proper store
-      const adds = [0, 0];
-      for (let i = 0; i<newGameState.pockets.length; i++) {
-        adds[ (i < 6) ? 0 : 1 ] += newGameState.pockets[i];
-        newGameState.pockets[i] = 0;
-      }
-      
-      newGameState.stores[0] += adds[0];
-      newGameState.stores[1] += adds[1];
-
-      onGameMessageLog(`Game over! Player 1 adds ${adds[0]} seed from their side, and Player 2 adds ${adds[1]} seeds from their side.`)
-    } else if (shouldSwitchActivePlayer) {
-      newGameState.activePlayer = newGameState.activePlayer === 0 ? 1 : 0;
+    // add all pocketedStones to the proper store
+    const adds = [0, 0];
+    for (let i = 0; i<gameState.pockets.length; i++) {
+      adds[ (i < 6) ? 0 : 1 ] += gameState.pockets[i];
+      gameState.pockets[i] = 0;
     }
-    setGameState( newGameState );
+    
+    gameState.stores[0] += adds[0];
+    gameState.stores[1] += adds[1];
+
+    whatJustHappened = `Player 1 added ${adds[0]} seed from their side, and Player 2 added ${adds[1]} seeds from their side.`
+
+  } else if (shouldSwitchActivePlayer) {
+    gameState.activePlayer = gameState.activePlayer === 0 ? 1 : 0;
+  }
+  gameState.lastExplaination = whatJustHappened;
+  return gameState;
+}
+
+export default function MancalaBoard({onGameMessageLog}:MancalaBoardParams){
+  const [gameState, setGameState] = useState(structuredClone(NEW_GAME));
+  const gameOver = isGameOver(gameState.pockets);
+
+  function selectPocket(pocketIdx:number):void{
+
+    // player can only select a pocket on thier side
+    const playerCanSelectPocket = gameState.activePlayer === 0 ? pocketIdx < 6 : pocketIdx > 5;
+    if (gameState.pockets[pocketIdx] === 0 || !playerCanSelectPocket)  {
+      onGameMessageLog(`Player ${gameState.activePlayer + 1} is trying to make an illegal move!`);
+      return;
+    }
+
+    setGameState(gameStateWas => {
+      return applyTurnGameState(structuredClone(gameStateWas), pocketIdx);
+    });
   }
 
-  let title = <>Player {gameState.activePlayer + 1 }'s Turn ({gameState.activePlayer === 0 ? "red" : "blue"}) </>
-  if (gameState.gameOver) {
-    const winningPlayerTitle = (gameState.stores[0] === gameState.stores[1] ) ? "Tie!" : (gameState.stores[0] > gameState.stores[1] )? "Player 1 Wins" : "Player 2 Win"
-    title = <> Game Over - {winningPlayerTitle}</>
-    
+  let winningPlayerTitle = <></>;
+  if (gameOver) {
+    winningPlayerTitle = <p className="conclusion">Game Over {(gameState.stores[0] === gameState.stores[1] ) ? "Tie!" : (gameState.stores[0] > gameState.stores[1] )? "Player 1 Wins" : "Player 2 Wins"}</p>
   }
-  return (<>
+
+  let activePlayerClassname = (gameOver) ? "" : gameState.activePlayer == 0 ? mancalaBoardClasses.active_player_1 : mancalaBoardClasses.active_player_2;
   
-    <h1>{title}</h1>
-    
-    <div id="mancala-board">
-
+  return (<>
+    <h1>Mancala Hour</h1>
+    <div className={`${mancalaBoardClasses.mancala_board} ${activePlayerClassname} ${mancalaBoardClasses.player_orientation_1}`} >
       <Pocket stonesCount={gameState.pockets[0]} onPocketSelect={() => selectPocket(0)} />
       <Pocket stonesCount={gameState.pockets[1]} onPocketSelect={() => selectPocket(1)} />
       <Pocket stonesCount={gameState.pockets[2]} onPocketSelect={() => selectPocket(2)} />
@@ -120,11 +140,11 @@ export default function MancalaBoard({onGameMessageLog}:MancalaBoardParams){
       <Pocket stonesCount={gameState.pockets[9]} onPocketSelect={() => selectPocket(9)} />
       <Pocket stonesCount={gameState.pockets[10]} onPocketSelect={() => selectPocket(10)} />
       <Pocket stonesCount={gameState.pockets[11]} onPocketSelect={() => selectPocket(11)} />
-      <Store stonesCount={gameState.stores[1]} />
-      
-    </div>   
-    <p className="subtitle">
-      Join us for mancala hour.
+      <Store stonesCount={gameState.stores[1]} />  
+    </div>
+    { gameOver && winningPlayerTitle }
+    <p className={mancalaBoardClasses.subtitle}>
+      {gameState.lastExplaination}
     </p>
-    </>)
+  </>)
 }
