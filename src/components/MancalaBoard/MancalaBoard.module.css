@@ -26,19 +26,19 @@ h1 {
 /* Set inactive player to dotted borders */
 .active_player_2 .store:nth-child(7),
 .active_player_1 .store:nth-child(14),
-.active_player_2 .pocket:nth-child(-n+7),
-.active_player_1 .pocket:nth-child(n+8) {
+.active_player_2 .pocket:nth-child(-n + 7),
+.active_player_1 .pocket:nth-child(n + 8) {
   border-style: dotted;
 }
 
 /* Active Player's pockets are clickable */
-.active_player_1 .pocket:nth-child(-n+7),
-.active_player_2 .pocket:nth-child(n+8) {
+.active_player_1 .pocket:nth-child(-n + 7),
+.active_player_2 .pocket:nth-child(n + 8) {
   cursor: pointer;
 }
 
-.pocket { 
-  width: 100%; 
+.pocket {
+  width: 100%;
   padding-bottom: 100%;
   border: 2px solid;
   border-radius: 50%;
@@ -51,7 +51,7 @@ h1 {
   top: 50%;
   left: 50%;
   text-align: center;
-  -ms-transform: translateY(-50%) translateX(-50%) ;
+  -ms-transform: translateY(-50%) translateX(-50%);
   transform: translateY(-50%) translateX(-50%);
   display: grid;
   grid-template-columns: 25% 25% 25%;
@@ -68,14 +68,14 @@ h1 {
   top: 50%;
   left: 50%;
   text-align: center;
-  -ms-transform: translateY(-50%) translateX(-46%) ;
+  -ms-transform: translateY(-50%) translateX(-46%);
   transform: translateY(-50%) translateX(-46%);
   height: 80%;
   width: 90%;
   display: grid;
   gap: 10%;
   grid-template-columns: 15% 15% 15% 15%;
-  grid-template-rows: 7% 7% 7% 7% 7% 7%  ;
+  grid-template-rows: 7% 7% 7% 7% 7% 7%;
 }
 
 .stone {
@@ -84,14 +84,18 @@ h1 {
   border: 1px solid #777;
   background-color: #777;
   border-radius: 50%;
-  color :#fff
+  color: #fff;
 }
 
 /*
 hide any stones, overflow will be shown as a "+ n"
 */
-.pocket .stone:nth-child(n+10) { display: none;}
-.store .stone:nth-child(n+25) { display: none;}
+.pocket .stone:nth-child(n + 10) {
+  display: none;
+}
+.store .stone:nth-child(n + 25) {
+  display: none;
+}
 
 /* lay out pocket stones like domino dots */
 .pocket[data-stones="1"] {
@@ -101,7 +105,7 @@ hide any stones, overflow will be shown as a "+ n"
   }
   .count {
     display: none;
-  };
+  }
 }
 
 .pocket[data-stones="2"] {
@@ -153,7 +157,7 @@ hide any stones, overflow will be shown as a "+ n"
     grid-column: 3;
   }
 }
-.pocket[data-stones="6"]  {
+.pocket[data-stones="6"] {
   .stone:nth-child(2) {
     grid-row: 1;
     grid-column: 3;
@@ -175,7 +179,7 @@ hide any stones, overflow will be shown as a "+ n"
     grid-column: 3;
   }
 }
-.pocket[data-stones="7"]  {
+.pocket[data-stones="7"] {
   .stone:nth-child(2) {
     grid-row: 1;
     grid-column: 3;
@@ -233,7 +237,7 @@ hide any stones, overflow will be shown as a "+ n"
   }
 }
 
-.pocket[data-stones="9"]  {
+.pocket[data-stones="9"] {
   .stone:nth-child(2) {
     grid-row: 1;
     grid-column: 3;
@@ -271,17 +275,17 @@ hide any stones, overflow will be shown as a "+ n"
 /*
 Overflow counts apply to pockets and stores
 */
-.count  {
+.count {
   position: absolute;
-  bottom: .2rem;
+  bottom: 0.2rem;
   width: 100%;
   text-align: center;
-  font-size: .8rem;
+  font-size: 0.8rem;
   font-weight: bold;
 }
 
 .blink_me {
-  animation: blinker .2s ease-in;
+  animation: blinker 0.2s ease-in;
 }
 
 @keyframes blinker {
@@ -291,14 +295,14 @@ Overflow counts apply to pockets and stores
 }
 
 /* Player colors */
-.store:nth-child(-n+8), 
-.pocket:nth-child(-n+8) {
+.store:nth-child(-n + 8),
+.pocket:nth-child(-n + 8) {
   border-color: #dd9292;
   background-color: #ece5e5;
 }
 
-.store:nth-child(n+8),
-.pocket:nth-child(n+8) {
+.store:nth-child(n + 8),
+.pocket:nth-child(n + 8) {
   border-color: #acaceb;
   background-color: #e8e8e8;
 }
@@ -309,133 +313,133 @@ Overflow counts apply to pockets and stores
     grid-column: 8;
     grid-row-start: 1;
   }
-  
+
   .store:nth-child(14) {
     grid-column: 1;
-    grid-row-start: 1; 
+    grid-row-start: 1;
   }
-  
+
   .pocket:nth-child(1) {
     grid-column: 7;
-    grid-row:2;
+    grid-row: 2;
   }
-  
+
   .pocket:nth-child(2) {
     grid-column: 6;
-    grid-row:2;
+    grid-row: 2;
   }
-  
+
   .pocket:nth-child(3) {
     grid-column: 5;
-    grid-row:2;
+    grid-row: 2;
   }
-  
+
   .pocket:nth-child(4) {
     grid-column: 4;
-    grid-row:2;
+    grid-row: 2;
   }
-  
+
   .pocket:nth-child(5) {
     grid-column: 3;
-    grid-row:2;
+    grid-row: 2;
   }
-  
+
   .pocket:nth-child(6) {
     grid-column: 2;
-    grid-row:2;
+    grid-row: 2;
   }
-  
+
   .pocket:nth-child(8) {
     grid-row: 1;
     grid-column: 2;
   }
-  
+
   .pocket:nth-child(9) {
     grid-row: 1;
     grid-column: 3;
   }
-  
+
   .pocket:nth-child(10) {
     grid-row: 1;
     grid-column: 4;
   }
-  
+
   .pocket:nth-child(11) {
     grid-row: 1;
     grid-column: 5;
   }
-  
+
   .pocket:nth-child(12) {
     grid-row: 1;
     grid-column: 6;
   }
-  
+
   .pocket:nth-child(13) {
     grid-row: 1;
     grid-column: 7;
   }
 }
 
-.player_orientation_2 { 
+.player_orientation_2 {
   .store:nth-child(7) {
     grid-column: 1;
     grid-row-start: 1;
   }
-  
+
   .store:nth-child(14) {
     grid-column: 8;
-    grid-row-start: 1; 
+    grid-row-start: 1;
   }
-  
+
   .pocket:nth-child(1) {
     grid-column: 2;
   }
-  
+
   .pocket:nth-child(2) {
     grid-column: 3;
   }
-  
+
   .pocket:nth-child(3) {
     grid-column: 4;
   }
-  
+
   .pocket:nth-child(4) {
     grid-column: 5;
   }
-  
+
   .pocket:nth-child(5) {
     grid-column: 6;
   }
-  
+
   .pocket:nth-child(6) {
     grid-column: 7;
   }
-  
+
   .pocket:nth-child(8) {
     grid-row: 2;
     grid-column: 7;
   }
-  
+
   .pocket:nth-child(9) {
     grid-row: 2;
     grid-column: 6;
   }
-  
+
   .pocket:nth-child(10) {
     grid-row: 2;
     grid-column: 5;
   }
-  
+
   .pocket:nth-child(11) {
     grid-row: 2;
     grid-column: 4;
   }
-  
+
   .pocket:nth-child(12) {
     grid-row: 2;
     grid-column: 3;
   }
-  
+
   .pocket:nth-child(13) {
     grid-row: 2;
     grid-column: 2;

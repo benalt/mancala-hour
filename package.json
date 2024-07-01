@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "mancala-gameplay": "github:benalt/mancala-gameplay#00c14b68085bfb6dbfdba0ec4e2fc05cb3db9d01",
+    "mancala-gameplay": "github:benalt/mancala-gameplay#cb2ebe9ee275f3d0a0d07900b29b107ac5e72f83",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
